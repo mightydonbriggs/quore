@@ -33,6 +33,8 @@
     $_SESSION['docRoot'] = $_SERVER['DOCUMENT_ROOT'];
     $_SESSION['appRoot'] = __DIR__; // This file (dboinit.php) should be in app root
     $_SESSION['libPath'] = $_SESSION['appRoot'] .DIRECTORY_SEPARATOR .'lib';
+    $_SESSION['templatePath'] = $_SESSION['appRoot'] .DIRECTORY_SEPARATOR .'templates';
+    $_SESSION['includePath'] = $_SESSION['appRoot'] .DIRECTORY_SEPARATOR .'inc';
 
     /**
      * This is the Autoloader. It allows us to instanciate classes without having

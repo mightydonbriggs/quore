@@ -2,7 +2,7 @@
 
 namespace DBO; //Namespace for Don! Briggs Objects
 
-abstract class DboDataObject
+abstract class DataObject
 {
     
     private $_versionDate = '01-Mar-2012';
@@ -23,7 +23,7 @@ abstract class DboDataObject
         } elseif (isset ($_SESSION['db'])) {
             static::$_db = $_SESSION['db'];
         } else {
-            throw new \Exception("ERROR: Could not set Database");
+            throw new \Exception("ERROR: Could not set Database object from session");
         }
     }
 

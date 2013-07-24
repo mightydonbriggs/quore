@@ -1,0 +1,43 @@
+<html>
+    <head>
+        <title>Quore Tech Test</title>
+        <link type="text/css" rel="stylesheet" href="css/quore.css" />
+    </head>
+<body>
+    <div id='container'>
+        <div id='header'>
+            <h1 class='title'>Quore Tech Test</h1>
+        </div>
+        <div id='navbar'>
+            <?php require($_SESSION['includePath'] .DIRECTORY_SEPARATOR .'nav.phtml'); ?>           
+        </div>
+        <div id='content'>
+            <table class="propertyDetail">
+                <thead>
+                    <tr><th colspan="2" class="propertyDetailTitle">Property Detail</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th>Property Name:</th><td><?php echo $this->propertyRec['name']; ?></td>
+                    </tr>
+                    <tr>                        
+                        <th>Brand:</th><td><?php echo $this->propertyRec['brand']; ?></td>
+                    </tr>
+                    <tr>                        
+                        <th>Region:</th><td><?php echo \Quore\Property::getRegionName($this->propertyRec['region_id']); ?></td>
+                    </tr>
+                    <tr>                        
+                        <th>Phone:</th><td><?php echo $this->propertyRec['phone']; ?></td>
+                    </tr>
+                    <tr>                        
+                        <th>Service Type:</th><td><?php echo \Quore\Property::getServiceTypeName($this->propertyRec['isFullService']); ?></td>
+                    </tr>
+                    <tr>                        
+                        <th>Web Site:</th><td><?php echo \DBO\Utilities::makeHyperlink($this->propertyRec['url']); ?></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>    
+</body>    
+</html>

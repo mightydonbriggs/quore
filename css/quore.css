@@ -58,7 +58,7 @@ div#navbar {
     width: 100%;
 }
 
-/*Styles for the Property List table*/
+/*  Styles for the Property List table  */
 .propertyList {
     margin-left: 25px;
     margin-top: 30px;
@@ -79,4 +79,22 @@ td {
     border: 1px;
     border-bottom-style: solid;
     border-color: black;
+}
+
+/*  Styles for the Property Detail table  */
+.propertyDetail {
+    margin-left: 25px;
+    margin-top: 30px;
+    width: 300px;
+    padding: 3px;
+    border-collapse: collapse;
+}
+
+.propertyDetail th {
+    text-align: left;
+}
+
+.propertyDetailTitle {
+    text-align: center !important;
+    font-size: larger;
 }

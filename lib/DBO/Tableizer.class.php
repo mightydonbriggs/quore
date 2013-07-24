@@ -212,15 +212,7 @@ class Tableizer {
         }
     }
     
-    public static function makeHyperlink($url, $linkText = null) {
-        
-        if(is_null($linkText)) {
-            $linkText = $url;
-        }
-        
-        $hyperlink = "<a href='" .$url ."'>" .$linkText ."</a>";
-        return $hyperlink;
-    }
+
 }
 
 ?>

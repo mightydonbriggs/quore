@@ -8,6 +8,7 @@ class PropertyListTable extends \DBO\Tableizer
                                      'brand'  => 'Brand',
                                      'region' => 'Region',
                                      'phone'  => 'Phone',
+                                     'serviceType' => 'Service Type',
                                      'url'    => 'Website');
     
     public function __construct($recordArray = null) {

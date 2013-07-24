@@ -171,18 +171,27 @@ class MySqlDatabase {
     return mysqli_affected_rows($this->_connection);
   }
 
-	private function confirm_query($result) {
+    private function confirm_query($result) {
         if (!$result) {
             if($this->_logQueries) { 
-//                error_log(mysqli_error($this->_connection) ."==========\n\n", 3, "/var/log/db.log");
-//                file_put_contents("/tmp/db.log", mysqli_error($this->_connection) ."==========\n\n", FILE_APPEND) ;
-            }
-	    $output = "\nDatabase query failed: " . mysqli_error($this->_connection) . "<br /><br />";
-	    $output .= "Last SQL query: " . $this->_last_query;
-	    die( $output );
-		}
-	}
+    //                error_log(mysqli_error($this->_connection) ."==========\n\n", 3, "/var/log/db.log");
+    //                file_put_contents("/tmp/db.log", mysqli_error($this->_connection) ."==========\n\n", FILE_APPEND) ;
+        }
+        $output = "\nDatabase query failed: " . mysqli_error($this->_connection) . "<br /><br />";
+        $output .= "Last SQL query: " . $this->_last_query;
+        die( $output );
+        }
+    }
 
+    public static function getInstance() {
+        if (isset ($_SESSION['db'])) {
+            return $_SESSION['db'];
+        } else {
+            throw new \Exception("ERROR: Could not set Database object from session");
+        }
+    }
+    
+    
 }
 
 ?>

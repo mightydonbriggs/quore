@@ -2,7 +2,7 @@
 
 namespace DBO;
 
-class DboForm extends \DBO\DboDataObject
+class HtmlForm extends \DBO\DboDataObject
 {
     protected $_rowQuery;     //Query to be run against table for dataset
     protected $_html = null;
