@@ -1,0 +1,82 @@
+/* 
+    Document   : quore
+    Created on : Jul 23, 2013, 4:00:59 PM
+    Author     : dbriggs
+    Description:
+        Master style sheet for quore application
+*/
+
+root { 
+    display: block;
+}
+
+body {
+    background: #efefef;
+    font-family: sans-serif;
+    color: #777;
+}
+
+div#container {
+    position: relative;
+    right: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: honeydew;
+}
+
+div#header {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 100%;
+    height: 35px;
+    /*background-color: #693;*/
+    background-color: #333;
+    color: #ffffff;
+}
+
+h1.title {
+    margin: 0;
+    padding: 5px;
+    font-size: 1.2em;
+}
+
+div#navbar {
+    position: absolute;
+    left: 0;
+    top: 35px;
+    width: 150px;
+    height: 100%;
+    background-color: #efefef;
+}
+
+#content {
+    position: absolute;
+    left: 160px;
+    top: 35px;
+    width: 100%;
+}
+
+/*Styles for the Property List table*/
+.propertyList {
+    margin-left: 25px;
+    margin-top: 30px;
+    width: 800px;
+    padding: 3px;
+    border-collapse: collapse;
+}
+
+.propertyListTitle {
+    font-size: larger;
+}
+th {
+    background-color: #693;
+    color: #ffffff;
+}
+
+td {
+    border: 1px;
+    border-bottom-style: solid;
+    border-color: black;
+}

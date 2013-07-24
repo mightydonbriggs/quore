@@ -1,0 +1,8 @@
+# I put the database login parameters here becuase it is more
+# secure than having them exposed in a file. -Don!
+
+#Setting some SERVER variables
+SetEnv HTTP_DB_DBNAME "quore"
+SetEnv HTTP_DB_USERNAME "root"
+SetEnv HTTP_DB_PASSWORD "root"
+SetEnv HTTP_DB_DBHOST "localhost"
