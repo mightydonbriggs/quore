@@ -4,9 +4,33 @@
     print "<pre>\n";
 //    print_r($_SERVER);
 //    print_r($_SESSION);
-    $view = new DBO\View('property_index.phtml');
+    print_r($_REQUEST);
+    $view = new DBO\View('property_index.phtml'); //Set default view
 //    print "</pre>\n";
 
+    /* 
+     * First handle the submit button. If it has a value, we have
+     * some record work to do 
+     */
+    if(isset($_REQUEST['btnSubmit'])) {
+        $btnSubmit = strtolower($_REQUEST['btnSubmit']);
+
+        $objProperty = new \Quore\Property;  //Instanciate a Property object
+        $objProperty->getById(2);
+print_r($objProperty);
+die();
+        switch ($btnSubmit) {
+            case 'save':
+print "Saving\n";                
+                $objProperty->saveFromArray($_REQUEST);
+                $_REQUEST['action'] = 'view';  //Change display from edit to view
+                break;
+
+            default:
+                break;
+        }
+    }
+    
     //Set action that will be exicuted
     if(!isset($_REQUEST['action']) || ($_REQUEST['action'] == '')) {
         $_REQUEST['action'] = 'index';

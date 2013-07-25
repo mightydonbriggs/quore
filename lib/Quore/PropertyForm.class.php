@@ -64,6 +64,19 @@ class PropertyForm extends \DBO\AbstractForm
                   ->setLabel('id:');
           $this->addElement($input_id);
           
+          $btn_submit = new \DBO\FormElementSubmit();
+          $btn_submit->setName('btnSubmit')
+                  ->setClass("formButton")
+                  ->setId('btnSubmit')
+                  ->setValue('Save');
+          $this->addElement($btn_submit);
+          
+          $btn_delete = new \DBO\FormElementSubmit();
+          $btn_delete->setName('btnDelete')
+                  ->setClass('formButton')
+                  ->setId('btnDelete')
+                  ->setValue('Delete');
+          $this->addElement($btn_delete);
     }
             
 }
