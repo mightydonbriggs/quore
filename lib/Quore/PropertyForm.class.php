@@ -1,0 +1,70 @@
+<?php
+
+namespace Quore;
+
+class PropertyForm extends \DBO\AbstractForm
+{
+    protected $_formName      = 'propertyEdit';
+    
+    public function __construct() {
+        parent::__construct($this->_formName);
+        $this->_init();
+    }
+    
+    private function _init() {
+          $this->setId('propertyEditForm')
+                ->setClass('editForm');
+          
+          $input_name = new \DBO\FormElementInput();
+          $input_name->setName('name')
+                  ->setClass('formInput')
+                  ->setId('txtName')
+                  ->setLabel('Name:');
+          $this->addElement($input_name);
+
+          $input_region = new \DBO\FormElementInput();
+          $input_region->setName('region_id')
+                  ->setClass('formInput')
+                  ->setId('txtRegionId')
+                  ->setLabel('Region:');
+          $this->addElement($input_region);
+
+          $input_brand = new \DBO\FormElementInput();
+          $input_brand->setName('brand')
+                  ->setClass('formInput')
+                  ->setId('txtBrand')
+                  ->setLabel('Brand:');
+          $this->addElement($input_brand);
+
+          $input_phone = new \DBO\FormElementInput();
+          $input_phone->setName('phone')
+                  ->setClass('formInput')
+                  ->setId('txtPhone')
+                  ->setLabel('Phone:');
+          $this->addElement($input_phone);
+
+          $input_serviceType = new \DBO\FormElementInput();
+          $input_serviceType->setName('isFullService')
+                  ->setClass('formInput')
+                  ->setId('txtServiceType')
+                  ->setLabel('Service Type:');
+          $this->addElement($input_serviceType);
+
+          $input_url = new \DBO\FormElementInput();
+          $input_url->setName('url')
+                  ->setClass('formUrl')
+                  ->setId('txtUrl')
+                  ->setLabel('Web Site:');
+          $this->addElement($input_url);
+
+          $input_id = new \DBO\FormElementInput();
+          $input_id->setName('id')
+                  ->setClass('formInput')
+                  ->setId('txtId')
+                  ->setLabel('id:');
+          $this->addElement($input_id);
+          
+    }
+            
+}
+?>

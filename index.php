@@ -32,12 +32,21 @@
         case 'view':
             $id = chop(intval($_REQUEST['id']));
             $objProperty = new \Quore\Property;
-            $propertyRec = $objProperty->getById($id);
+            $propertyRec = $objProperty->getFieldValueArray($_REQUEST['id']);
             $view->setTemplate('property_view.phtml');
             $view->propertyRec = $propertyRec;
+            $view->buttonPanel = new \Quore\ButtonPanel();
             break;
         
         case 'edit':
+            $id = chop(intval($_REQUEST['id']));
+            $objProperty = new \Quore\Property;
+            $propertyRec = $objProperty->getFieldValueArray($_REQUEST['id']);
+            $propertyForm = new Quore\PropertyForm;
+//            $propertyForm->setValueByName('name', 'testing');
+            $propertyForm->setValuesByArray($propertyRec);
+            $view->setTemplate('property_edit.phtml');
+            $view->propertyForm = $propertyForm;           
             break;
     default:
         break;

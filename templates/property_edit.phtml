@@ -1,0 +1,19 @@
+<html>
+    <head>
+        <title>Quore Tech Test</title>
+        <link type="text/css" rel="stylesheet" href="css/quore.css" />
+    </head>
+<body>
+    <div id='container'>
+        <div id='header'>
+            <h1 class='title'>Quore Tech Test</h1>
+        </div>
+        <div id='navbar'>
+            <?php require($_SESSION['includePath'] .DIRECTORY_SEPARATOR .'nav.phtml'); ?>           
+        </div>
+        <div id='content'>
+            <?php $this->propertyForm->render(); ?>
+        </div>
+    </div>    
+</body>    
+</html>

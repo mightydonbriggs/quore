@@ -32,5 +32,12 @@ class Property extends \DBO\DataObject
         $row = $db->fetch_array($result);
         return $row['regionName'];
     }
+    
+    public function getFieldValueArray($id) {
+        $id = intval($id);
+        $propertyRec = $this->getById($id);
+        $propertyRec['id'] = $this->getId();
+        return $propertyRec;
+    }
 }
 ?>

@@ -5,14 +5,14 @@ namespace DBO; //Namspace for Don! Briggs Objects
 
 class MySqlDatabase {
 
-    private $_versionDate = '01-Mar-2012';
+    private $_versionDate = '24-Jul-2013';
     
     private $_dbName;
     private $_connection;
     public  $_last_query;
     private $_magic_quotes_active;
     private $_real_escape_string_exists;
-    private $_logQueries = 1; //Set to 1 to log queries to file
+    private $_logQueries = 0; //Set to 1 to log queries to file
 
     /**
      * Create instance object, login to db server, and connect to db
@@ -129,16 +129,16 @@ class MySqlDatabase {
             $fieldName = $meta->name;
             if(key_exists($fieldName, $recArray)) {
                 switch ($meta->type) {
-                    case 246:
+                    case 246:  //Field is a floating point numeric
                         $recArray[$fieldName] = floatval($recArray[$fieldName]);
                         break;
-                    case 253:
+                    case 253:  //Field is a string value
                         $recArray[$fieldName] = strval($recArray[$fieldName]);
                         break;
-                    case 3:
+                    case 3:    //Field is an integer
                         $recArray[$fieldName] = intval($recArray[$fieldName]);
                         break;
-                    default:
+                    default:  //Treat as string by default
                         $recArray[$fieldName] = strval($recArray[$fieldName]);
                         break;
                 }
@@ -174,8 +174,6 @@ class MySqlDatabase {
     private function confirm_query($result) {
         if (!$result) {
             if($this->_logQueries) { 
-    //                error_log(mysqli_error($this->_connection) ."==========\n\n", 3, "/var/log/db.log");
-    //                file_put_contents("/tmp/db.log", mysqli_error($this->_connection) ."==========\n\n", FILE_APPEND) ;
         }
         $output = "\nDatabase query failed: " . mysqli_error($this->_connection) . "<br /><br />";
         $output .= "Last SQL query: " . $this->_last_query;
