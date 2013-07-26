@@ -14,7 +14,7 @@ abstract class DataObject
     protected static $_fieldMeta   = null;    //Field metadata for this table
     protected static $_autoEscape = true;    //Automatic 'escape' on record write, and 'de-escape' on read.
 
-    protected $_rowFields = null;            //Array holding database column names and data values
+    protected $_rowColumns = null;            //Array holding database column names and data values
     protected $_id        = null;            //ID of record. (Should in in Record object)
             
     function __construct($db=null) {
@@ -35,6 +35,17 @@ abstract class DataObject
         return $this->_id;
     }
     
+    /**
+     * This function will create an empty record for display. The record is not
+     * saved to the database, but can be displayed to the user for editing.
+     */
+    public function addNew() {
+        $this->_rowColumns = array();  //Clear any existing field values
+        foreach(static::$_fieldMeta as $key => $value) {
+            $this->_rowColumns[$key] = null;
+        }
+    }
+    
     public function save() {
         if(is_null($this->_id) || $this->_id == 0) {
             $result = $this->_insert();
@@ -44,22 +55,40 @@ abstract class DataObject
         return $result;
     }
     
+    /**
+     * Accepts an array of fieldnames and values, and save it to to the data
+     * table. The fieldnames can either be mapped field names, or column names
+     * from the data table. Fields that do not map to table column names will
+     * be ignored.
+     * 
+     * @param array $recordArray Array of field names and values
+     * @return result
+     */
+    
     public function saveFromArray ($recordArray) {      
-        $this->_rowFields = array();
+        
+        //If a field map is set perform field mapping
         if(count(static::$_fieldMap)) {          
             $mapFields = true;
             $recordArray = static::fieldNames2dbColumns($recordArray);
         } else {
-            //@TODO Add code for non-mapping
-            die("ERROR:No Mapping!!!!");
+            //Remove any values that are not columns in the database
+            $recordArray = array_intersect_key($recordArray, static::$_fieldMeta);            
         }
-        $this->_rowFields = $recordArray;     
+        
+        //Store final record values in instance variabld
+        $this->_rowColumns = $recordArray;
+        
+        //Remove primary key from record array before saving
         $pkName = static::$_primaryKey;
         if(key_exists($pkName, $recordArray)) {
             $this->_id = $recordArray[$pkName];
             unset($recordArray[$pkName]);
         }
+        
+        //Save record and return result
         $result = $this->save();
+print_r($result);        
         return $result;
     }
 
@@ -67,6 +96,17 @@ abstract class DataObject
         $sql = "SELECT * FROM " .static::$_tableName;
         $result = static::$_db->query($sql);
         return $result;
+    }
+    
+    /**
+     * Return a list of data columns in the data table
+     */
+    public static function getColumnList() {
+        $columnList = array();
+        foreach(static::$_fieldMeta as $key => $value) {
+            $columnList[] = $key;
+        }
+        return $columnList;
     }
     
     public function getById($id) {
@@ -86,9 +126,9 @@ abstract class DataObject
         $sql = "SELECT \n" .$fieldList ."\nFROM " .static::$_tableName ." \n"
              . "WHERE " .static::$_primaryKey ."=" .addslashes($id);
         $result = static::$_db->query($sql);
-        $this->_rowFields = static::$_db->fetch_array($result);
+        $this->_rowColumns = static::$_db->fetch_array($result);
         $this->_setId();        
-        return $this->_rowFields;        
+        return $this->_rowColumns;        
     }
     
     public function deleteById($id) {
@@ -113,7 +153,7 @@ abstract class DataObject
      */
     
     public function echoField($fieldName) {
-        $fieldData = $this->_rowFields[$fieldName];
+        $fieldData = $this->_rowColumns[$fieldName];
         if($fieldData == '') {
             echo "&nbsp;";
         } else {
@@ -166,18 +206,19 @@ abstract class DataObject
     
             
     /**
-     * Insert the current contents of '$this->$_rowFields' into the database
+     * Insert the current contents of '$this->$_rowColumns' into the database
      * 
-     * @return integer|boolean The insertID of the new record, or false if insert fails
+     * @return integer|boolean The insertID of the new record, or false if 
+     * insert fails
      */
     protected function _insert() {
-        $this->_rowFields['date_created'] = time();
-        $numFields = count($this->_rowFields);
+        $this->_rowColumns['dateCreate'] = time();
+        $numFields = count($this->_rowColumns);
         $fieldList = "";
         $valueList = "";
         $i=1;
         
-        foreach($this->_rowFields as $fieldName => $fieldValue) {
+        foreach($this->_rowColumns as $fieldName => $fieldValue) {
             $fieldList .= $fieldName;
             $valueList .= $this->_castField($fieldName, $fieldValue);
             //Add comma to strings if this is not the last field
@@ -203,14 +244,14 @@ abstract class DataObject
     
     protected function _update() {
      
-        $this->_setId(); //remove PK field from _rowFields, and set in object
+        $this->_setId(); //remove PK field from _rowColumns, and set in object
         $pkName = static::$_primaryKey;  
-        $this->_rowFields['date_updated'] = time();
-        $numFields = count($this->_rowFields);
+        $this->_rowColumns['dateUpdate'] = time();
+        $numFields = count($this->_rowColumns);
         $setList = "";
         $i=1;
         
-        foreach($this->_rowFields as $fieldName => $fieldValue) {
+        foreach($this->_rowColumns as $fieldName => $fieldValue) {
             $setList .= "  " .$fieldName ."=" .$this->_castField($fieldName, $fieldValue);
             //Add comma to strings if this is not the last field
             if($i < $numFields) {
@@ -234,6 +275,19 @@ abstract class DataObject
     protected function _setTable($tableName) {
         static::$_tableName = $tableName;
         static::_getTableMeta();
+    }
+
+    
+    protected function _getColumnNames() {
+        
+        assert(is_array(static::$_fieldMeta));
+        
+        $columnNames = array();
+        $numFields = count(static::$_fieldMeta);
+        for($i=0; $i<$numFields; $i++) {
+            $colName = static::$_fieldMeta[$i];
+            
+        }
     }
 
 
@@ -330,11 +384,11 @@ abstract class DataObject
 
     protected function _setId() {
         $pkName = static::$_primaryKey;
-        if(key_exists($pkName, $this->_rowFields)) {
-            $this->_id = $this->_rowFields[$pkName];
-            unset($this->_rowFields[$pkName]);
+        if(key_exists($pkName, $this->_rowColumns)) {
+            $this->_id = $this->_rowColumns[$pkName];
+            unset($this->_rowColumns[$pkName]);
         } else {
-            $this->_rowFields[$pkName] = null;
+            $this->_rowColumns[$pkName] = null;
         }
     }
     

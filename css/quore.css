@@ -113,3 +113,10 @@ td {
     color: #ffffff;
     width: 100px;
 }
+
+.formButton {
+    color: chocolate;
+    /*background: black;*/
+    /*display: inline;*/
+    float: left;
+}

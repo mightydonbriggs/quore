@@ -35,9 +35,17 @@
                     <tr>                        
                         <th>Web Site:</th><td><?php echo \DBO\Utilities::makeHyperlink($this->propertyRec['url']); ?></td>
                     </tr>
+                    <tr>                        
+                        <td colspan="2">
+                            <form action="index.php">
+                                <input type="hidden" name="action" value="edit">
+                                <input type="hidden" name="id" value="<?php echo $this->propertyRec['id']; ?>">
+                                <input type="submit" class='formButton' value="Edit">
+                            </form>                            
+                        </td>
+                    </tr>
                 </tbody>
             </table>
-            <a href="/index.php?action=edit&id=<?php echo $this->propertyRec['id']; ?>">[Edit]</a>
         </div>
     </div>    
 </body>    

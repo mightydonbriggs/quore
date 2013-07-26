@@ -16,6 +16,7 @@ class FormElementInput extends  \DBO\AbstractFormElement
         $this->_inputType = $inputType;
         return $this;
     }
+    
     public function getHtml() {
         
         $html = $this->_getLabel()

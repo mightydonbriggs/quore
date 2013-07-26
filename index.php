@@ -6,7 +6,6 @@
 //    print_r($_SESSION);
     print_r($_REQUEST);
     $view = new DBO\View('property_index.phtml'); //Set default view
-//    print "</pre>\n";
 
     /* 
      * First handle the submit button. If it has a value, we have
@@ -17,15 +16,32 @@
 
         $objProperty = new \Quore\Property;  //Instanciate a Property object
         $objProperty->getById(2);
-print_r($objProperty);
-die();
         switch ($btnSubmit) {
             case 'save':
-print "Saving\n";                
-                $objProperty->saveFromArray($_REQUEST);
+                $id = $objProperty->saveFromArray($_REQUEST);
+                if($id === false) {
+                    //Save Failed
+                    print "Cluster Fuck!!\n";
+                    print_r($objProperty);
+                    die;
+                } else {
+                    //Save succeeded
+                    print "ID: $id \n";
+                    $_REQUEST['id'] = $id;
+                }
                 $_REQUEST['action'] = 'view';  //Change display from edit to view
                 break;
-
+            case 'cancel':
+                $_REQUEST['action'] = 'view';  //Change display from edit to view
+                break;
+            case 'add':
+                $_REQUEST['action'] = 'add';
+                $columnList = \Quore\Property::getColumnList();
+                \DBO\Utilities::clearRequestFields($columnList);
+                break;
+            case 'delete':
+                $_REQUEST['action'] = 'delete';
+                
             default:
                 break;
         }
@@ -53,6 +69,7 @@ print "Saving\n";
             $table = new \Quore\PropertyListTable($propList->getRecArray());
             $content = $table->getHTML();
             break;
+        
         case 'view':
             $id = chop(intval($_REQUEST['id']));
             $objProperty = new \Quore\Property;
@@ -67,11 +84,25 @@ print "Saving\n";
             $objProperty = new \Quore\Property;
             $propertyRec = $objProperty->getFieldValueArray($_REQUEST['id']);
             $propertyForm = new Quore\PropertyForm;
-//            $propertyForm->setValueByName('name', 'testing');
             $propertyForm->setValuesByArray($propertyRec);
             $view->setTemplate('property_edit.phtml');
             $view->propertyForm = $propertyForm;           
             break;
+        
+        case 'add':
+            $objProperty = new \Quore\Property;
+            $propertyForm = new Quore\PropertyForm;
+            $view->setTemplate('property_edit.phtml');
+            $view->propertyForm = $propertyForm;
+            break;
+        
+        case 'delete':
+            $id = chop(intval($_REQUEST['id']));
+            $objProperty = new \Quore\Property;
+            $objProperty->deleteById($id);
+            $propList = new \Quore\PropertyList;
+            $table = new \Quore\PropertyListTable($propList->getRecArray());
+            $content = $table->getHTML();
     default:
         break;
 }

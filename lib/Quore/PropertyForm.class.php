@@ -59,10 +59,19 @@ class PropertyForm extends \DBO\AbstractForm
 
           $input_id = new \DBO\FormElementInput();
           $input_id->setName('id')
+                  ->setInputType('hidden')
                   ->setClass('formInput')
-                  ->setId('txtId')
-                  ->setLabel('id:');
+//                  ->setLabel('id:')
+                  ->setId('txtId');
           $this->addElement($input_id);
+          
+          //-- Add control buttons to form --//
+          $btn_add = new \DBO\FormElementSubmit();
+          $btn_add->setName('btnSubmit')
+                  ->setClass("formButton")
+                  ->setId('btnAdd')
+                  ->setValue('Add');
+          $this->addElement($btn_add);
           
           $btn_submit = new \DBO\FormElementSubmit();
           $btn_submit->setName('btnSubmit')
@@ -72,11 +81,18 @@ class PropertyForm extends \DBO\AbstractForm
           $this->addElement($btn_submit);
           
           $btn_delete = new \DBO\FormElementSubmit();
-          $btn_delete->setName('btnDelete')
+          $btn_delete->setName('btnSubmit')
                   ->setClass('formButton')
                   ->setId('btnDelete')
                   ->setValue('Delete');
           $this->addElement($btn_delete);
+          
+          $btn_cancel = new \DBO\FormElementSubmit();
+          $btn_cancel->setName('btnSubmit')
+                  ->setClass("formButton")
+                  ->setId('btnCancel')
+                  ->setValue('Cancel');
+          $this->addElement($btn_cancel);
     }
             
 }
