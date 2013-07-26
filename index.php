@@ -4,7 +4,7 @@
     print "<pre>\n";
 //    print_r($_SERVER);
 //    print_r($_SESSION);
-    print_r($_REQUEST);
+//    print_r($_REQUEST);
     $view = new DBO\View('property_index.phtml'); //Set default view
 
     /* 
@@ -15,18 +15,18 @@
         $btnSubmit = strtolower($_REQUEST['btnSubmit']);
 
         $objProperty = new \Quore\Property;  //Instanciate a Property object
-        $objProperty->getById(2);
         switch ($btnSubmit) {
             case 'save':
-                $id = $objProperty->saveFromArray($_REQUEST);
-                if($id === false) {
+                $result = $objProperty->saveFromArray($_REQUEST);
+                if($result === false) {
                     //Save Failed
-                    print "Cluster Fuck!!\n";
+                    //@todo Write code to handle save failure
+                    print "Save Error!!\n";
                     print_r($objProperty);
                     die;
                 } else {
                     //Save succeeded
-                    print "ID: $id \n";
+                    $id = $objProperty->getId();
                     $_REQUEST['id'] = $id;
                 }
                 $_REQUEST['action'] = 'view';  //Change display from edit to view
@@ -76,7 +76,6 @@
             $propertyRec = $objProperty->getFieldValueArray($_REQUEST['id']);
             $view->setTemplate('property_view.phtml');
             $view->propertyRec = $propertyRec;
-            $view->buttonPanel = new \Quore\ButtonPanel();
             break;
         
         case 'edit':

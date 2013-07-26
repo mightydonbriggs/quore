@@ -59,7 +59,7 @@ class PropertyForm extends \DBO\AbstractForm
 
           $input_id = new \DBO\FormElementInput();
           $input_id->setName('id')
-                  ->setInputType('hidden')
+//                  ->setInputType('hidden')
                   ->setClass('formInput')
 //                  ->setLabel('id:')
                   ->setId('txtId');

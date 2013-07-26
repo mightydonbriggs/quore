@@ -88,7 +88,6 @@ abstract class DataObject
         
         //Save record and return result
         $result = $this->save();
-print_r($result);        
         return $result;
     }
 

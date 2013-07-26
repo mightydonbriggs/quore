@@ -36,6 +36,7 @@ class Property extends \DBO\DataObject
     public function getFieldValueArray($id) {
         $id = intval($id);
         $propertyRec = $this->getById($id);
+        assert(is_array($propertyRec));
         $propertyRec['id'] = $this->getId();
         return $propertyRec;
     }
