@@ -15,7 +15,7 @@
     if(isset($_REQUEST['btnSubmit'])) {
         $btnSubmit = strtolower($_REQUEST['btnSubmit']);
 
-        $objProperty = new \Quore\Property;  //Instanciate a Property object
+        $objProperty = new \Quore\Property(null, $_REQUEST);  //Instanciate a Property object
         switch ($btnSubmit) {
             case 'save':
                 //First run validation on record
@@ -28,11 +28,11 @@
                     //record passed validation
                     $result = $objProperty->saveFromArray($_REQUEST);
                     if($result === false) {
-                        //Save Failed
-                        //@todo Write code to handle save failure
-                        print "Save Error!!\n";
-                        print_r($objProperty);
-                        die;
+                        $errors = $objProperty->getDbErrors();
+//print_r($errors);
+//die;
+                        $view->pageErrors = DBO\Utilities::genErrorHtml($objProperty->getDbErrors());
+                        $action = 'edit';
                     } else {
                         //Save succeeded
                         $id = $objProperty->getId();
@@ -48,6 +48,7 @@
             case 'add':
                 $_REQUEST['action'] = 'add';
                 $columnList = \Quore\Property::getColumnList();
+                $objProperty->addNew();
                 \DBO\Utilities::clearRequestFields($columnList);
                 break;
             case 'delete':
@@ -83,7 +84,7 @@
         
         case 'view':
             $id = chop(intval($_REQUEST['id']));
-            $objProperty = new \Quore\Property;
+            $objProperty = new \Quore\Property(null, $_REQUEST);
             $propertyRec = $objProperty->getFieldValueArray($_REQUEST['id']);
             $view->setTemplate('property_view.phtml');
             $view->propertyRec = $propertyRec;

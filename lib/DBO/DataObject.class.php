@@ -12,19 +12,23 @@ abstract class DataObject
     protected static $_fieldMap    = null;    //Mapping of source data fields names to database column names
     protected static $_db          = null;    //Database Insance, either passed in or from session
     protected static $_fieldMeta   = null;    //Field metadata for this table
-    protected static $_autoEscape = true;    //Automatic 'escape' on record write, and 'de-escape' on read.
-
+    protected static $_autoEscape  = true;    //Automatic 'escape' on record write, and 'de-escape' on read.
+    
     protected $_rowColumns = null;            //Array holding database column names and data values
-    protected $_id        = null;            //ID of record. (Should in in Record object)
+    protected $_id         = null;             //ID of record. (Should in in Record object)
+    protected $_dbErrors   = array();//die
             
     function __construct($db=null) {
+        
         if(!is_null($db)) {
-            static::$_db = $db;
+            static::$_db = $db;//print_r($errors);
         } elseif (isset ($_SESSION['db'])) {
             static::$_db = $_SESSION['db'];
         } else {
+//            $this->_errors[] = "ERROR: Could not set Database object from session";
             throw new \Exception("ERROR: Could not set Database object from session");
         }
+        
     }
 
     public function getInsertId() {
@@ -41,9 +45,16 @@ abstract class DataObject
      */
     public function addNew() {
         $this->_rowColumns = array();  //Clear any existing field values
+        $this->_id = null;
         foreach(static::$_fieldMeta as $key => $value) {
             $this->_rowColumns[$key] = null;
         }
+    }
+    
+    public function insert() {
+        $this->_id = null;
+        $result = $this->_insert();
+        return $result;
     }
     
     public function save() {
@@ -51,6 +62,9 @@ abstract class DataObject
             $result = $this->_insert();
         } else {
             $result = $this->_update();
+        }
+        if(!$result){
+            $errors = static::$_db->getErrors();
         }
         return $result;
     }
@@ -109,7 +123,7 @@ abstract class DataObject
     }
     
     public function getById($id) {
-
+        assert(is_int($id));
         $numFields = count(static::$_fieldMeta);
         $fieldList = "";
         $i=1;
@@ -237,6 +251,7 @@ abstract class DataObject
             $this->_id = $insertId;
             return $insertId;
          } else {
+             $this->_dbErrors = static::$_db->getErrors();
              return false;
          }
     }
@@ -262,7 +277,10 @@ abstract class DataObject
              . $setList ."\n "
              . "WHERE " .$pkName ."=" .$this->_castField($pkName, $this->_id);
         
-         $result = static::$_db->query($sql);       
+         $result = static::$_db->query($sql);
+         if(!$result) {
+             
+         }
         return $result;
     }
     
@@ -289,7 +307,10 @@ abstract class DataObject
         }
     }
 
-
+    public function getDbErrors() {
+        return $this->_dbErrors;
+    }
+    
     protected static function _getTableMeta() {
 
         $columns = array();
@@ -311,7 +332,7 @@ abstract class DataObject
             if($recs[$i]['COLUMN_KEY'] == 'PRI') {
                 static::$_primaryKey = $columnName;
             }
-        }       
+        }            
         static::$_fieldMeta= $columns;
     }
     

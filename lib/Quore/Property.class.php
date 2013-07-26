@@ -4,9 +4,13 @@ namespace Quore;
 
 class Property extends \DBO\DataObject
 {
-    public function __construct($db = null) {
+    public function __construct($db = null, $fieldValues = null) {
         parent::__construct($db);
         $this->_setTable('property');
+        //If values array was passed, set values now.
+        if(!is_null($fieldValues)) {
+            $this->setFieldsFromArray($fieldValues);
+        }
     }
     
     
@@ -34,11 +38,32 @@ class Property extends \DBO\DataObject
     }
     
     public function getFieldValueArray($id) {
+        
+        $propertyRec = array();
         $id = intval($id);
-        $propertyRec = $this->getById($id);
-        assert(is_array($propertyRec));
-        $propertyRec['id'] = $this->getId();
+        if($id) {
+            $propertyRec = $this->getById($id);
+            $propertyRec['id'] = $this->getId();
+        } else {
+            $propertyRec = $this->setFieldsFromArray($_REQUEST);
+        }
         return $propertyRec;
     }
-}
+
+    
+    
+    public function setFieldsFromArray(array $fieldValues) {
+        
+        //Filter out any elements tha are not databas columns
+        $initialValues = array_intersect_key($fieldValues, static::$_fieldMeta);
+        if(count($initialValues) > 1) {
+            foreach($initialValues as $colName => $colValue) {
+                $this->_rowColumns[$colName] = $colValue;
+                //@TODO Following line bypasses casting. Write nicer solution
+                self::$_fieldMeta[$colName]['value'] = $colValue;
+            }
+            return $this->_rowColumns;
+        }
+    }
+}    
 ?>

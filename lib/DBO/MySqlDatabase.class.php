@@ -7,12 +7,14 @@ class MySqlDatabase {
 
     private $_versionDate = '24-Jul-2013';
     
-    private $_dbName;
-    private $_connection;
+    protected $_dbName;
+    protected $_connection;
     public  $_last_query;
-    private $_magic_quotes_active;
-    private $_real_escape_string_exists;
-    private $_logQueries = 0; //Set to 1 to log queries to file
+    protected $_magic_quotes_active;
+    protected $_real_escape_string_exists;
+    protected $_logQueries = 0; //Set to 1 to log queries to file
+    
+    protected static $_errors = array();
 
     /**
      * Create instance object, login to db server, and connect to db
@@ -60,13 +62,17 @@ class MySqlDatabase {
 	public function query($sql) {
 
 		$this->_last_query = $sql;
+                self::$_errors = array();
                 if($this->_logQueries) {
 //                    error_log($sql, 3, "/var/log/db.log");
 //                    file_put_contents("/tmp/db.log", $sql ."\n\n", FILE_APPEND) ;
                 }
                 $result = mysqli_query($this->_connection, $sql);
-		$this->confirm_query($result);
-		return $result;
+		if($this->confirm_query($result) === false) {
+                    return false;
+                } else {
+                    return $result;
+                }
 	}
 
 	public function escape_value( $value ) {
@@ -173,14 +179,19 @@ class MySqlDatabase {
 
     private function confirm_query($result) {
         if (!$result) {
-            if($this->_logQueries) { 
-        }
-        $output = "\nDatabase query failed: " . mysqli_error($this->_connection) . "<br /><br />";
-        $output .= "Last SQL query: " . $this->_last_query;
-        die( $output );
+            //Query failed
+            array_push(self::$_errors, mysqli_error($this->_connection));
+            return false;
+        } else {
+            //Query succeeded
+            return true;
         }
     }
 
+    public static function getErrors() {
+        return self::$_errors;              
+    }
+    
     public static function getInstance() {
         if (isset ($_SESSION['db'])) {
             return $_SESSION['db'];
