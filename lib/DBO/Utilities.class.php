@@ -42,6 +42,24 @@ class Utilities
             $_REQUEST[$fieldList[$i]] = '';
         }
     }
+    
+    /**
+     * Accept an array of error messages, and generate HTML to display them.
+     * 
+     * @param array $errors Array of error messages from validators
+     * @return null
+     */
+    public static function genErrorHtml(array $errors) {
+        $numErrors = count($errors);
+        if($numErrors) {
+            $messages = "Please fix the following errors:<br>\n";
+            $messages .= implode("<br />\n", $errors);
+            $messages .= "<br />\n";
+            return $messages;
+        } else {
+            return null;
+        }
+    }
 }
 
 ?>

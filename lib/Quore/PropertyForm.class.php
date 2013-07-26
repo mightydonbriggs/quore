@@ -59,9 +59,8 @@ class PropertyForm extends \DBO\AbstractForm
 
           $input_id = new \DBO\FormElementInput();
           $input_id->setName('id')
-//                  ->setInputType('hidden')
+                  ->setInputType('hidden')
                   ->setClass('formInput')
-//                  ->setLabel('id:')
                   ->setId('txtId');
           $this->addElement($input_id);
           
@@ -94,6 +93,5 @@ class PropertyForm extends \DBO\AbstractForm
                   ->setValue('Cancel');
           $this->addElement($btn_cancel);
     }
-            
 }
 ?>

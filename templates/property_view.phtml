@@ -12,6 +12,7 @@
             <?php require($_SESSION['includePath'] .DIRECTORY_SEPARATOR .'nav.phtml'); ?>           
         </div>
         <div id='content'>
+            <div id="pageErrors"><?php if(isset($this->pageErrors)) { echo $this->pageErrors; }?></div>
             <table class="propertyDetail">
                 <thead>
                     <tr><th colspan="2" class="propertyDetailTitle">Property Detail</th></tr>

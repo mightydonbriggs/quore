@@ -120,3 +120,9 @@ td {
     /*display: inline;*/
     float: left;
 }
+
+/*Page Error Style*/
+#pageErrors {
+    color: red;
+    font-size: small;
+}

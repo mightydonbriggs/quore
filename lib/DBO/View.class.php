@@ -25,7 +25,7 @@ class View
 //print "Found it!\n";            
             return $this->_data[$propName];
         } else {
-            throw new \Exception("ERROR: The property: $propName was not found");
+            return null;
         }
     }
     

@@ -4,7 +4,8 @@
     print "<pre>\n";
 //    print_r($_SERVER);
 //    print_r($_SESSION);
-//    print_r($_REQUEST);
+    print_r($_REQUEST);
+    $errors = array();
     $view = new DBO\View('property_index.phtml'); //Set default view
 
     /* 
@@ -17,19 +18,29 @@
         $objProperty = new \Quore\Property;  //Instanciate a Property object
         switch ($btnSubmit) {
             case 'save':
-                $result = $objProperty->saveFromArray($_REQUEST);
-                if($result === false) {
-                    //Save Failed
-                    //@todo Write code to handle save failure
-                    print "Save Error!!\n";
-                    print_r($objProperty);
-                    die;
+                //First run validation on record
+                $errors = \Quore\PropertyValidator::validate($_REQUEST);
+                if(count($errors)) {
+                    //record failed validation
+                    $view->pageErrors = \DBO\Utilities::genErrorHtml($errors);
+                    $action = "edit";
                 } else {
-                    //Save succeeded
-                    $id = $objProperty->getId();
-                    $_REQUEST['id'] = $id;
+                    //record passed validation
+                    $result = $objProperty->saveFromArray($_REQUEST);
+                    if($result === false) {
+                        //Save Failed
+                        //@todo Write code to handle save failure
+                        print "Save Error!!\n";
+                        print_r($objProperty);
+                        die;
+                    } else {
+                        //Save succeeded
+                        $id = $objProperty->getId();
+                        $_REQUEST['id'] = $id;
+                    }
+                    $_REQUEST['action'] = 'view';  //Change display from edit to view
                 }
-                $_REQUEST['action'] = 'view';  //Change display from edit to view
+                
                 break;
             case 'cancel':
                 $_REQUEST['action'] = 'view';  //Change display from edit to view
