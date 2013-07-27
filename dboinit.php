@@ -18,7 +18,8 @@
      * Having the database login information here is a security risk, so I moved
      * it to the .htaccess file, where it can not be accessed by the outside world.
      */
-
+    
+    $_SESSION['baseUrl'] = $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
     $dbName     = $_SERVER['HTTP_DB_DBNAME'];
     $dbUsername = $_SERVER['HTTP_DB_USERNAME'];
     $dbPassword = $_SERVER['HTTP_DB_PASSWORD'];
@@ -30,7 +31,7 @@
     } 
     
     //--- Store some basic path info in the session
-    $_SESSION['docRoot'] = $_SERVER['DOCUMENT_ROOT'];
+    $_SESSION['docRoot'] = $_SERVER['DOCUMENT_ROOT'] . $_SERVER['REQUEST_URI'];
     $_SESSION['appRoot'] = __DIR__; // This file (dboinit.php) should be in app root
     $_SESSION['libPath'] = $_SESSION['appRoot'] .DIRECTORY_SEPARATOR .'lib';
     $_SESSION['templatePath'] = $_SESSION['appRoot'] .DIRECTORY_SEPARATOR .'templates';

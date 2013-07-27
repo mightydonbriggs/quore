@@ -4,7 +4,7 @@
     print "<pre>\n";
 //    print_r($_SERVER);
 //    print_r($_SESSION);
-    print_r($_REQUEST);
+//    print_r($_REQUEST);
     $errors = array();
     $view = new DBO\View('property_index.phtml'); //Set default view
 
